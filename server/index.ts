@@ -76,6 +76,14 @@ app.use((req, res, next) => {
     // no-op if import fails
   }
 
+  // start Neynar poller if configured
+  try {
+    const { startNeynarPoller } = await import('./neynar');
+    startNeynarPoller();
+  } catch (e) {
+    // no-op if optional module missing
+  }
+
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
